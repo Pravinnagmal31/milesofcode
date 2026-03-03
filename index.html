@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pravin Nagmal | Miles of Code</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0a0a0b;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent-cyan: #00bcd4;
+            --accent-orange: #ff5722;
+            --text-main: #e0e0e0;
+            --text-dim: #a0a0a0;
+            --drawer-width: 280px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Hamburger & Drawer --- */
+        .hamburger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            cursor: pointer;
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            background: var(--card-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: calc(-1 * var(--drawer-width));
+            width: var(--drawer-width);
+            height: 100%;
+            background: #161618;
+            z-index: 999;
+            transition: 0.3s ease;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            padding-top: 80px;
+        }
+
+        .drawer.active { left: 0; }
+
+        .drawer-title {
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0 30px;
+            color: var(--accent-orange);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .drawer-link {
+            display: block;
+            padding: 15px 30px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .drawer-link:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--accent-cyan);
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            z-index: 998;
+        }
+
+        /* --- Main Layout --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+        
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .profile-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-cyan);
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
+        }
+
+        h1, h2, h3 { font-family: 'JetBrains Mono', monospace; margin-top: 0; }
+        .accent-text { color: var(--accent-cyan); }
+        .orange-text { color: var(--accent-orange); }
+
+        .timeline-item {
+            border-left: 2px solid var(--accent-cyan);
+            padding-left: 20px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute; left: -9px; top: 0; width: 16px; height: 16px; background: var(--accent-cyan); border-radius: 50%;
+        }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+        .bar-bg { background: #333; height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 15px; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-orange)); border-radius: 5px; }
+
+        .btn-resume-mini {
+            position: absolute; top: 20px; right: 20px; background: transparent; color: var(--accent-cyan); border: 1px solid var(--accent-cyan);
+            padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.75rem; font-weight: bold; transition: 0.3s; font-family: 'JetBrains Mono', monospace;
+        }
+        .btn-resume-mini:hover { background: var(--accent-cyan); color: #000; }
+
+        .project-link { display: inline-block; margin-top: 10px; text-decoration: none; color: var(--accent-cyan); font-size: 0.9rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="hamburger" id="nav-toggle">
+    <i class="fa fa-bars"></i>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<nav class="drawer" id="drawer">
+    <div class="drawer-title">Tools</div>
+    <a href="tools/formatjson.html" target="_blank" class="drawer-link"><i class="fa fa-code"></i> JSON Formatter</a>
+    <!-- <a href="tools/calculateemi.html" target="_blank" class="drawer-link"><i class="fa fa-calculator"></i> EMI Calculator</a> -->
+</nav>
+
+<div class="container">
+    <header class="glass-card" style="text-align: center;">
+        <a href="resume/PravinNagmal26.pdf" target="_blank" class="btn-resume-mini">
+            <i class="fa fa-external-link-alt"></i> RESUME
+        </a>
+
+        <img src="images/profile.jpeg" alt="Pravin Nagmal" class="profile-img">
+        <h1>Pravin <span class="accent-text">Nagmal</span></h1>
+        <p style="font-size: 1.1rem;">Software Engineer | <span class="orange-text">Tech Explorer</span></p>
+        <div>
+            <a href="mailto:nagmalpravin@gmail.com" class="accent-text" style="margin: 0 10px;"><i class="fa fa-envelope"></i></a>
+            <a href="https://linkedin.com/in/pravinnagmal" class="accent-text" style="margin: 0 10px;"><i class="fab fa-linkedin"></i></a>
+            <span><i class="fa fa-map-marker-alt"></i> Pune, India</span>
+        </div>
+    </header>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 30px;">
+        <div style="flex: 1; min-width: 300px;">
+            <div class="glass-card">
+                <h3><i class="fa fa-running"></i> Tech Stamina</h3>
+                <p>Kotlin & Jetpack Components</p>
+                <div class="bar-bg"><div class="bar-fill" style="width: 95%;"></div></div>
+                <p>Architecture (MVVM/MVP)</p>
+                <div class="bar-bg"><div class="bar-fill" style="width: 90%;"></div></div>
+                <p>Performance & SQL</p>
+                <div class="bar-bg"><div class="bar-fill" style="width: 85%;"></div></div>
+            </div>
+            
+            <div class="glass-card">
+                <h3><i class="fa fa-graduation-cap"></i> Training Grounds</h3>
+                <p><strong>B.E. Electronics & Telecommunication</strong><br>Solapur University | 2015-2018</p>
+                <p><strong>Diploma in E&TC</strong><br>MSBTE Mumbai | 2012-2015</p>
+            </div>
+        </div>
+
+        <div style="flex: 2; min-width: 300px;">
+            <div class="glass-card">
+                <h3><i class="fa fa-route"></i> Professional Miles</h3>
+                
+                <div class="timeline-item">
+                    <h4 class="accent-text">Firstcry.com | Software Developer I</h4>
+                    <p class="text-dim">Aug 2022 - Present | Pune</p>
+                    <ul>
+                        <li>Developed and optimized Android applications using multi-threading and Jetpack components.</li>
+                        <li>Managed end-to-end development, deployment, and bug-fixing.</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4 class="accent-text">Tacktile Systems | Android Developer</h4>
+                    <p class="text-dim">April 2021 - July 2022 | Nagpur</p>
+                    <ul>
+                        <li>Implemented MVVM architecture for maintainable and testable code.</li>
+                        <li>Utilized core components like Activities, Services, and Broadcast Receivers.</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4 class="accent-text">Vedam Labs | Application Developer</h4>
+                    <p class="text-dim">July 2018 - Mar 2021 | Solapur</p>
+                    <ul>
+                        <li>Designed and developed native Android applications from concept to deployment.</li>
+                        <li>Applied OOP principles and Android SDK to build efficient mobile solutions.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="margin-top: 40px; text-align: center;">Featured <span class="orange-text">Sprints</span></h3>
+    <div class="grid">
+        <div class="glass-card">
+            <h4>FirstCry India & Arabia</h4>
+            <p class="text-dim">India's largest online platform for baby, kids, and parenting products.</p>
+            <a href="https://play.google.com/store/apps/details?id=com.firstcry.android" target="_blank" class="project-link">
+                View on Play Store <i class="fa fa-external-link-alt"></i>
+            </a>
+        </div>
+        <div class="glass-card">
+            <h4>Simple Accounting</h4>
+            <p class="text-dim">Managing transactions, invoices, and expense tracking for small businesses.</p>
+            <a href="#" target="_blank" class="project-link">Explore Features <i class="fa fa-external-link-alt"></i></a>
+        </div>
+        <div class="glass-card">
+            <h4>Intellitots & LMS Academy</h4>
+            <p class="text-dim">Learning management and employee training platforms.</p>
+            <a href="#" target="_blank" class="project-link">View Case Study <i class="fa fa-external-link-alt"></i></a>
+        </div>
+    </div>
+
+    <footer style="text-align: center; margin-top: 50px; opacity: 0.6;">
+        <p>Built with Kotlin and Grit. &copy; 2026 Pravin Nagmal</p>
+    </footer>
+</div>
+
+<script>
+    const navToggle = document.getElementById('nav-toggle');
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+
+    navToggle.addEventListener('click', () => {
+        drawer.classList.toggle('active');
+        overlay.style.display = drawer.classList.contains('active') ? 'block' : 'none';
+    });
+
+    overlay.addEventListener('click', () => {
+        drawer.classList.remove('active');
+        overlay.style.display = 'none';
+    });
+</script>
+
+</body>
+</html>
